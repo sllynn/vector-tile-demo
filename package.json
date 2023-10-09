@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@koopjs/output-vector-tiles": "^2.2.0",
-    "@sllynn/koop-provider": "^0.0.2",
+    "@sllynn/koop-provider": "^0.0.3",
     "@turf/bbox-polygon": "^6.5.0",
     "@turf/projection": "^6.5.0",
     "config": "^3.2.4",
