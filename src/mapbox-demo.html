@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'/>
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.0.0/mapbox-gl.js'></script>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/1.0.0/mapbox-gl.css' rel='stylesheet'/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZG1mZW50b24xIiwiYSI6IkVXbXR1RzQifQ.XRUIHgHV8Id3sWky3Prf1g';
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    zoom: 12,
+    center: [0.0, 51.5]
+  });
+  map.showTileBoundaries = true;
+  //?bbox={bbox-epsg-3857}&h3res=5&h3col=h3_lvl5
+
+  map.on('load', function () {
+    map.addSource("motorway_junctions", {
+        type: 'vector',
+        tiles: ['http://localhost:8080/databricks/rest/services/stuart.geospatial.oproad_motorway_junctions/VectorTileServer/{z}/{x}/{y}.pbf'],
+        minzoom: 2,
+        maxzoom: 11
+      }
+    );
+    map.addSource("road_nodes", {
+        type: 'vector',
+        tiles: ['http://localhost:8080/databricks/rest/services/stuart.geospatial.oproad_road_nodes_indexed/VectorTileServer/{z}/{x}/{y}.pbf?bbox={bbox-epsg-3857}&h3res=5&h3col=h3_lvl5'],
+        minzoom: 9,
+        maxzoom: 16
+      }
+    );
+    map.addSource("road_links", {
+        type: 'vector',
+        tiles: ['http://localhost:8080/databricks/rest/services/stuart.geospatial.oproad_road_links_indexed/VectorTileServer/{z}/{x}/{y}.pbf?bbox={bbox-epsg-3857}&h3res=7&h3col=h3_lvl7'],
+        minzoom: 11,
+        maxzoom: 16
+      }
+    );
+    map.addLayer({
+      id: "motorway_junction_labels",
+      source: "motorway_junctions",
+      "source-layer": "stuart.geospatial.oproad_motorway_junctions",
+      type: "symbol",
+      layout: {
+        "text-field": "{junction_number}",
+        "symbol-placement": "point",
+        "text-offset": [0, -1]
+      }
+    });
+    map.addLayer({
+      id: "motorway_junction_geoms",
+      source: "motorway_junctions",
+      "source-layer": "stuart.geospatial.oproad_motorway_junctions",
+      "type": "circle",
+      "paint": {
+        "circle-radius": 5,
+        "circle-color": "#3900bf",
+        "circle-stroke-width": 0.5
+      }
+    });
+    map.addLayer({
+      id: "road_node_geoms",
+      source: "road_nodes",
+      "source-layer": "stuart.geospatial.oproad_road_nodes_indexed",
+      "type": "circle",
+      "paint": {
+        "circle-radius": 1,
+        "circle-color": "#8f00bf",
+        "circle-stroke-width": 0.5
+      }
+    });
+    map.addLayer({
+      id: "road_link_labels",
+      source: "road_links",
+      "source-layer": "stuart.geospatial.oproad_road_links_indexed",
+      type: "symbol",
+      layout: {
+        "text-field": "{name_1}",
+        "symbol-placement": "line",
+        "text-allow-overlap": true,
+        "text-size": 4
+      }
+    });
+    map.addLayer({
+      id: "road_link_geoms",
+      source: "road_links",
+      "source-layer": "stuart.geospatial.oproad_road_links_indexed",
+      "type": "line",
+      "paint": {
+        "line-color": "#bf5000"
+      }
+    });
+
+
+    map.addControl(new mapboxgl.NavigationControl());
+  });
+</script>
+</body>
+</html>
