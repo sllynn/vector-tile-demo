@@ -62,6 +62,9 @@ jobs:
       - name: unzip artifact for deployment
         run: unzip release.zip
 
+      - name: Authenticate with private NPM package
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.PACKAGE_TOKEN }}" > ~/.npmrc
+
       - name: reinstall node modules
         run: rm -rf ./node_modules && npm install
 
