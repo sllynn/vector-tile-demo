@@ -1,0 +1,17 @@
+{
+  "port": 8080,
+  "@sllynn/koop-provider": {},
+  "@koopjs/output-vector-tiles": {},
+  "koopOutputVectorTiles": {
+    "geojsonVT": {
+      "cache": true,
+      "cacheExpiration": 300,
+      "extent": 4096,
+      "tolerance": 50,
+      "debug": 2,
+      "indexMaxPoints": 0,
+      "indexMaxZoom": 0
+    },
+    "maxAge": 3600
+  }
+}
